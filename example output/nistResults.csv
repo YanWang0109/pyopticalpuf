@@ -1,0 +1,12 @@
+test name,result,score,time taken
+Monobit,Failed,0.0,0
+Frequency Within Block,Failed,0.0,1
+Longest Run Ones In A Block,Failed,1.0900547141740785e-77,4
+Binary Matrix Rank,Failed,0.0,286
+Discrete Fourier Transform,Failed,4.734037881140755e-24,26
+Non Overlapping Template Matching,Passed,0.015535868330333649,1284
+Serial,Failed,0.0,12074
+Approximate Entropy,Failed,0.0,8774
+Cumulative Sums,Passed,0.9999999864372178,314
+Random Excursion,Failed,0.027614292954617682,996
+Random Excursion Variant,Failed,0.0353283113750557,4
