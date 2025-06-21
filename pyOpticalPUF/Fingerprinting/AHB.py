@@ -5,7 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class AHBParameters(FingerprintingAlgorithmParameters):
     keySize: tuple[int, int]
-    kernelSize: int = 36
+    kernelSize: int = 35
 
 class AHB(FingerprintingAlgorithm):
     """
