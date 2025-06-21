@@ -31,5 +31,5 @@ dependencies = [
 keywords = ["PUF", "Image processing"]
 
 [project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Homepage = "https://github.com/ellaandr/pyopticalpuf"
+Issues = "https://github.com/ellaandr/pyopticalpuf/issues"
