@@ -24,21 +24,20 @@ class AHB(FingerprintingAlgorithm):
         assert isinstance(parameters, AHBParameters), "Provided parameters are not AHB parameters"
         assert parameters.kernelSize % 2 == 1, "Kernel size must be odd"
 
+        # Define the kernel
         n = parameters.kernelSize
         kernel = np.ones((n, n), dtype=np.float32)
         kernel[(n//2), (n//2)] = -n**2 + 1
 
-        filtered_image = np.zeros_like(singleChannelImage, dtype=np.uint8)
+    # Output shape after valid convolution
 
-        height, width = singleChannelImage.shape
-        for i in range(height - n + 1):
-            for j in range(width - n + 1):
-                window = singleChannelImage[i:i+n, j:j+n].copy()
-                result = np.sum(window * kernel)
-                if result < 0:
-                    filtered_image[i, j] = 0  # Black
-                else:
-                    filtered_image[i, j] = 255  # White
+        outputRows = singleChannelImage.shape[0] - n + 1
+        outputCols = singleChannelImage.shape[1] - n + 1
+        filteredImage = np.zeros((outputRows, outputCols), dtype=np.uint8)
 
+        for i in range(outputRows):
+            for j in range(outputCols):
+                window = singleChannelImage[i:i+n, j:j+n]
+                filteredImage[i, j] = -np.sum(window * kernel)
 
-        return filtered_image
+        return cls._binarise(filteredImage, 0, parameters.keySize)
