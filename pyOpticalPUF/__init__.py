@@ -1,4 +1,4 @@
-from . import Fingerprinting
+from .Fingerprinting import *
 from . import Display
 from . import Distributions
 from . import HammingDistanceCalculators
