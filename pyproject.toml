@@ -9,7 +9,7 @@ authors = [
   { name="Ella Mann-Andrews", email="e.mann-andrews@lancaster.ac.uk" },
   { name="Blake Halliday", email="halliday_blake@outlook.com"},
 ]
-description = "A small example package"
+description = "A python package for use in analysing optical physical unclonable functions (oPUFs)."
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
