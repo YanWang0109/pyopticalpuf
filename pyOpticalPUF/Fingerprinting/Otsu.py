@@ -7,7 +7,7 @@ from .FingerprintAlgorithm import *
 class OtsuParameters:
     keySize: tuple[int, int]
 
-class Ostu(FingerprintingAlgorithm):
+class Otsu(FingerprintingAlgorithm):
     """
     Apply Otsu's thresholding method to binarize a grayscale image.
 
