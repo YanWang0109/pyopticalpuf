@@ -11,7 +11,7 @@ from pyOpticalPUF.Utility import ImageHelper
 from itertools import product
 from pyOpticalPUF.HammingDistanceCalculators import HammingDistanceCalculator
 from pyOpticalPUF.Distributions import GuassianDistribution
-from pyOpticalPUF.Display import DistributionDisplay
+from pyOpticalPUF.Display import DistributionDisplay, OverTimeTestingDispaly
 
 def calculateHammingDistance(intraFingerprints: List[np.ndarray], interFingerprints: List[np.ndarray]):
     #1. Create every combination of intras (ignoring comparing the same image twice) and inters 
@@ -26,9 +26,9 @@ def calculateHammingDistance(intraFingerprints: List[np.ndarray], interFingerpri
 if __name__ == "__main__":
 
     intraInterFolders = [
-        ["example output\intras", "example output\inters"],
-        ["example output\intras", "example output\inters"],
-        ["example output\intras", "example output\inters"],
+        ["example output/intras", "example output/inters"],
+        ["example output/intras", "example output/inters"],
+        ["example output/intras", "example output/inters"],
     ]
 
     intraHammingDistances = []
@@ -45,9 +45,5 @@ if __name__ == "__main__":
     intraGuassians = [GuassianDistribution.fromData(dist) for dist in intraHammingDistances]
     interGuassians = [GuassianDistribution.fromData(dist) for dist in interHammingDistances]
 
-    xRange = np.arange(0, 1, 0.01)
-    for i, (intra, inter) in enumerate(zip(intraGuassians, interGuassians)):
-        DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), *intraGuassians, *interGuassians)
-    plt.xlabel("Hamming distance")
-    plt.ylabel("Time")
+    OverTimeTestingDispaly.plot(intraGuassians, interGuassians)
     plt.show()

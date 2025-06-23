@@ -63,8 +63,7 @@ class DistributionDisplay(Plotable):
         cls._validateParameters(**kwargs)
         labels = kwargs.pop(LABELS, None)
         plottingFunction = kwargs.pop(PLOTTING_FUNCTION, "pdf")
-        axis = plt.subplot(projection="3d")
-        lines = [axis.plot(xRange, yRange, cls._getPlottingFunction(dist, plottingFunction)(xRange),**kwargs)[0] for dist in distributions]
+        lines = [plt.plot(xRange, yRange, cls._getPlottingFunction(dist, plottingFunction)(xRange),**kwargs)[0] for dist in distributions]
 
         if labels is not None:
             plt.legend(lines, labels)
@@ -273,5 +272,17 @@ class FullTestingDisplay(Plotable):
             verticalalignment = "bottom"
         )
 
+class OverTimeTestingDispaly(Plotable):
 
-        self.show()
+    @classmethod
+    def plot(cls, intras: List[GuassianDistribution], inters: List[GuassianDistribution]):
+        fig = plt.figure("overtime figure")
+        subplots: np.ndarray[Axes] = fig.subplots(2, 2)
+
+        xRange = np.arange(0, 1, 0.01)
+        for i, (intra, inter) in enumerate(zip(intras, inters)):
+            DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), intra, color="red")
+            DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), inter, color="blue")
+
+        subplots[0, 0].set_xlabel("Hamming distance")
+        subplots[0, 0].set_ylabel("Time")
