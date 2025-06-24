@@ -19,3 +19,5 @@ which displays
 Lenna | Lenna-print
 :----:|:------------:
 ![Lenna](Examples/Lenna_(test_image).png) | ![Lennaprint](Examples/leenaprint.png)
+
+## Displays
