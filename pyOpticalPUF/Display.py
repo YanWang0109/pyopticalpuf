@@ -3,6 +3,8 @@ from itertools import product
 from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from mpl_toolkits.axisartist.parasite_axes import HostAxes
+
 from typing import List, Literal
 
 import numpy as np
@@ -50,23 +52,27 @@ class DistributionDisplay(Plotable):
     def plot(cls, xRange: list, *distributions: Distribution, **kwargs):
         cls._validateParameters(**kwargs)
         labels = kwargs.pop(LABELS, None)
+        
+        axis: Axes = kwargs.pop("ax", plt.subplot())
         plottingFunction = kwargs.pop(PLOTTING_FUNCTION, "pdf")
-        lines = [plt.plot(xRange, cls._getPlottingFunction(dist, plottingFunction)(xRange), **kwargs)[0] for dist in distributions]
+        lines = [axis.plot(xRange, cls._getPlottingFunction(dist, plottingFunction)(xRange), **kwargs)[0] for dist in distributions]
 
         if labels is not None:
-            plt.legend(lines, labels)
+            axis.legend(lines, labels)
 
-        return lines
+        return lines, axis
 
     @classmethod
     def plot3D(cls, xRange: List, yRange: List, *distributions: Distribution, **kwargs):
         cls._validateParameters(**kwargs)
         labels = kwargs.pop(LABELS, None)
+        axis: Axes = kwargs.pop("ax", None)
+        if axis is None: axis = plt.subplot(projection="3d")
         plottingFunction = kwargs.pop(PLOTTING_FUNCTION, "pdf")
-        lines = [plt.plot(xRange, yRange, cls._getPlottingFunction(dist, plottingFunction)(xRange),**kwargs)[0] for dist in distributions]
+        lines = [axis.plot(xRange, yRange, cls._getPlottingFunction(dist, plottingFunction)(xRange),**kwargs)[0] for dist in distributions]
 
         if labels is not None:
-            plt.legend(lines, labels)
+            axis.legend(lines, labels)
 
         return lines
 
@@ -107,9 +113,6 @@ class FullTestingDisplay(Plotable):
         self.inters = inters
         self.fingerprintingAlgorithm = fingerprintingAlgorithm
         self.fingerprintingAlgorithmParameters = fingerprintingAlgorithmParameters
-        # intraFingerprints = intraFingerprints
-        # interFingerprints = interFingerprints
-        ...
 
     def plot(self):
         intraFingerprints = [self.fingerprintingAlgorithm.calculateFingerprint(i, self.fingerprintingAlgorithmParameters) for i in self.intras]
@@ -275,14 +278,129 @@ class FullTestingDisplay(Plotable):
 class OverTimeTestingDispaly(Plotable):
 
     @classmethod
-    def plot(cls, intras: List[GuassianDistribution], inters: List[GuassianDistribution]):
+    def plot(cls, intras: List[GuassianDistribution], inters: List[GuassianDistribution], intraHammings: List[List[float]], interHammings: List[List[float]]):
         fig = plt.figure("overtime figure")
-        subplots: np.ndarray[Axes] = fig.subplots(2, 2)
+        distributionPlots = fig.add_subplot(2, 2, 1, projection="3d")
 
         xRange = np.arange(0, 1, 0.01)
         for i, (intra, inter) in enumerate(zip(intras, inters)):
-            DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), intra, color="red")
-            DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), inter, color="blue")
+            DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), intra, color="red", ax=distributionPlots)
+            DistributionDisplay.plot3D(xRange, np.repeat(i, xRange.shape[0]), inter, color="blue", ax=distributionPlots)
+        distributionPlots.set_xlabel("Hamming distance")
+        distributionPlots.set_ylabel("Time")
+        distributionPlots.legend(["Intras", "Inters"])
 
-        subplots[0, 0].set_xlabel("Hamming distance")
-        subplots[0, 0].set_ylabel("Time")
+
+        reliabilityOverTime = [reliability(dist) for dist in intras]
+        uniquenessOverTime = [uniqueness(dist) for dist in intras]
+        enibOverTime = [enib(dist) for dist in intras]
+        decidabilityOverTime = [enib(dist) for dist in intras]
+        pocOverTime = [probabilityOfCloning(intra, inter) for intra, inter in zip(intras, inters)]
+
+        fomPlot = fig.add_subplot(2, 2, 2)
+
+        # Plot reliability
+        fomPlot.plot(reliabilityOverTime, 'r-', label='Reliability')
+        fomPlot.set_ylabel("Reliability (%)", color='r',fontsize=18)
+        fomPlot.set_ylim(0, 100)
+        fomPlot.tick_params(axis='y', labelcolor='r',labelsize=14)
+
+        # Plot uniqueness
+        ax2 = fomPlot.twinx()
+        ax2.plot(uniquenessOverTime, 'b-', label='Uniqueness')
+        ax2.set_ylabel("Uniqueness (%)", color='b',fontsize=18)
+        ax2.set_ylim(0, 100)
+        ax2.tick_params(axis='y', labelcolor='b',labelsize=14)
+
+        # Plot ENIB
+        ax3 = fomPlot.twinx()
+        ax3.spines['right'].set_position(('outward', 70))
+        ax3.plot(enibOverTime, 'g-', label='ENIB')
+        ax3.set_ylabel("ENIB", color='g',fontsize=18)
+        ax3.set_ylim(0, 1000)
+        ax3.tick_params(axis='y', labelcolor='g',labelsize=14)
+
+        # Plot decidability
+        ax4 = fomPlot.twinx()
+        ax4.spines['right'].set_position(('outward', 150))
+        ax4.plot(decidabilityOverTime, 'orange', label='Decidability')
+        ax4.set_ylabel("Decidability", color='orange',fontsize=18)
+        ax4.tick_params(axis='y', labelcolor='orange',labelsize=14)
+
+        # Plot PoC
+        ax5 = fomPlot.twinx()
+        ax5.spines['right'].set_position(('outward', 220))
+        ax5.plot(pocOverTime, 'purple', label='Probability of Cloning')
+        ax5.set_ylabel("PoC", color='purple',fontsize=18)
+        ax5.set_yscale('log')
+        ax5.tick_params(axis='y', labelcolor='purple',labelsize=14)
+
+        # Set x-axis label and title
+        fomPlot.set_xlabel("Time",fontsize=18)
+        ax5.tick_params(axis='x',labelsize=14)
+        fomPlot.set_title("Performance over time", fontsize=20)
+
+        # Adding legends
+        lines = [fomPlot.get_lines()[0], ax2.get_lines()[0], ax3.get_lines()[0], ax4.get_lines()[0], ax5.get_lines()[0]]
+        labels = [line.get_label() for line in lines]
+        fomPlot.legend(lines, labels, loc='upper left')
+
+
+
+        #Bit Error rate plot
+        bitErrorPlot = fig.add_subplot(2, 2, 3)
+        berOverTime = [np.mean(hds) for hds in intraHammings]
+        berStdOverTime = [np.std(hds) for hds in intraHammings]
+
+        bitErrorPlot.errorbar(range(len(berOverTime)), berOverTime, berStdOverTime)
+        bitErrorPlot.set_ylabel("BER")
+        bitErrorPlot.set_xlabel("Time")
+        bitErrorPlot.set_title("Bit Error Rate (BER)")
+        bitErrorPlot.set_ylim(0, 1)
+
+
+        tprOverTime = [TPR(dist, hds) for dist, hds in zip(intras, intraHammings)]
+        tnrOverTime = [TNR(dist, hds) for dist, hds in zip(inters, interHammings)]
+        fprOverTime = [FPR(dist, hds) for dist, hds in zip(inters, intraHammings)]
+        fnrOverTime = [FNR(dist, hds) for dist, hds in zip(intras, interHammings)]
+
+        performancePlot = fig.add_subplot(2, 2, 4)
+        # Plot FPR
+        performancePlot.plot(fprOverTime, 'r-', label='FPR')
+        performancePlot.set_ylabel("FPR", color='r',fontsize=18)
+        performancePlot.tick_params(axis='y', labelcolor='r',labelsize=14)
+        performancePlot.set_yscale('log')
+
+        # Plot TPR
+        ax2 = performancePlot.twinx()
+        ax2.plot(tprOverTime, 'b-', label='TPR')
+        ax2.set_ylabel("TPR", color='b',fontsize=18)
+        ax2.tick_params(axis='y', labelcolor='b',labelsize=14)
+        ax2.set_yscale('log')
+
+        # Plot TNR
+        ax3 = performancePlot.twinx()
+        ax3.spines['right'].set_position(('outward', 60))
+        ax3.plot(tnrOverTime, 'g-', label='TNR')
+        ax3.set_ylabel("TNR", color='g',fontsize=18)
+        ax3.tick_params(axis='y', labelcolor='g',labelsize=14)
+        ax3.set_yscale('log')
+
+        # Plot FNR
+        ax4 = performancePlot.twinx()
+        ax4.spines['right'].set_position(('outward', 120))
+        ax4.plot(fnrOverTime, 'orange', label='FNR')
+        ax4.set_ylabel("FNR", color='orange',fontsize=18)
+        ax4.tick_params(axis='y', labelcolor='orange',labelsize=14)
+        ax4.set_yscale('log')
+
+        # Set x-axis label and title
+        performancePlot.set_xlabel("Time", fontsize=14)
+        performancePlot.set_title("Classification Metrics over Time", fontsize=20)
+
+        # Adding legends
+        lines = [performancePlot.get_lines()[0], ax2.get_lines()[0], ax3.get_lines()[0], ax4.get_lines()[0]]
+        labels = [line.get_label() for line in lines]
+        performancePlot.legend(lines, labels, loc='upper left')
+        
+        ...

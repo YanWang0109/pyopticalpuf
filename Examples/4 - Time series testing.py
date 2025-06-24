@@ -39,11 +39,13 @@ if __name__ == "__main__":
         interFingerprints = ImageHelper.loadImagesFromFolder(interFolder)
         intraHDs, interHDs = calculateHammingDistance(intraFingerprints, interFingerprints)
         
+        intraHDs = np.add(intraHDs, np.random.random(len(intraHDs)) * 0.1)
+        interHDs = np.add(interHDs, np.random.random(len(interHDs)) * 0.1)
         intraHammingDistances.append(intraHDs)
         interHammingDistances.append(interHDs) 
 
     intraGuassians = [GuassianDistribution.fromData(dist) for dist in intraHammingDistances]
     interGuassians = [GuassianDistribution.fromData(dist) for dist in interHammingDistances]
 
-    OverTimeTestingDispaly.plot(intraGuassians, interGuassians)
+    OverTimeTestingDispaly.plot(intraGuassians, interGuassians, intraHammingDistances, interHammingDistances)
     plt.show()
