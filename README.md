@@ -8,11 +8,11 @@ Currently local binary patterns (LBP), adaptive high boost (AHB), Otsu and Sauvo
 ``` python
 from pyOpticalPUF import LBP, LBPParameters
 import cv2
-params = LBPParameters(radius = 2, neighbours = 8, keySize = (100, 100))
+params = LBPParameters(radius = 2, neighbours = 8, keySize = (512, 512))
 lenna = cv2.imread("Examples/Lenna_(test_image).png", cv2.IMREAD_GRAYSCALE)
 fingerprint = LBP.calculateFingerprint(lenna, parameters = params)
-cv2.imshow("lenna", lenna)
-cv2.imshow("leenaprint", fingerprint)
+cv2.imshow("Lenna", lenna)
+cv2.imshow("Leena-print", fingerprint)
 cv2.waitKey()
 ```
 which displays
