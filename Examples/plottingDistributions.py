@@ -1,6 +1,6 @@
 import sys
 import os
-OPUF_DIR = "Refactor\OPUFToolkit"
+OPUF_DIR = ""
 sys.path.append(os.path.dirname(OPUF_DIR))
 
 import matplotlib.pyplot as plt

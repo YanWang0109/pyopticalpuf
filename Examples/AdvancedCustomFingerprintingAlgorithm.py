@@ -3,7 +3,7 @@ import os
 import cv2
 from numpy import ndarray
 from dataclasses import dataclass
-OPUF_DIR = "Refactor\OPUFToolkit"
+OPUF_DIR = ""
 sys.path.append(os.path.dirname(OPUF_DIR))
 
 from pyOpticalPUF.Fingerprinting.FingerprintAlgorithm import FingerprintingAlgorithmParameters, FingerprintingAlgorithm
