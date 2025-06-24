@@ -21,3 +21,19 @@ Lenna | Lenna-print
 ![Lenna](Examples/Lenna_(test_image).png) | ![Lennaprint](Examples/leenaprint.png)
 
 ## Displays
+This library comes with a few built in displays to aid with visualisation and interpretation. 
+
+__Display example here__
+
+
+## Metrics
+...
+
+## NIST
+...
+
+## Utility
+...
+
+## References
+Ella Mann-Andrews, Thomas McGrath, Blake Halliday, Robert James Young; A guide for assessing optically imaged physically unclonable functions for authentication. Appl. Phys. Rev. 1 June 2025; 12 (2): 021314. https://doi.org/10.1063/5.0253691
