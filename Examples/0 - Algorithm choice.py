@@ -14,7 +14,8 @@ from pyOpticalPUF.Fingerprinting.Sauvola import *
 
 if __name__ == "__main__":
     while True:
-        pathToImage = input("Enter path to image:")
+        #pathToImage = input("Enter path to image:")
+        pathToImage = "/content/drive/MyDrive/cutted_square_images/a11.jpg"
         pathToImage = Path(pathToImage)
         if pathToImage.exists():
             break
@@ -25,7 +26,7 @@ if __name__ == "__main__":
     # lbpParameters = LBPParameters(50, 24, (100, 100))
     # lbpFingerprint = LBP.calculateFingerprint(image, lbpParameters)
     
-    sauvolaParameters = SauvolaParameters((100,100), (5,5), 0.005)
+    sauvolaParameters = SauvolaParameters((250,250), (151,151), 0.005)
     sauvolaFingerprint = Sauvola.calculateFingerprint(image, sauvolaParameters) 
 
     # ahbParameters = AHBParameters((100, 100), kernelSize=35)
