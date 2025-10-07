@@ -2,8 +2,8 @@ import numpy as np
 from warnings import warn
 from itertools import product
 from tqdm import tqdm
-from nistrng import *
-from colorama import Fore, init, Style
+#from nistrng import *
+#from colorama import Fore, init, Style
 
 class NIST:
     @staticmethod
