@@ -68,40 +68,40 @@ Probability of cloning: {probabilityOfCloningScore}""")
     ax.set_xlabel("Hamming distance")
     ax.set_ylabel("Count")
     ax.legend(loc="upper right")
-
-    # 初始阈值
-    ymin, ymax = ax.get_ylim()
-    init_thresh = 0.30
-    thresholdLine = ax.vlines(init_thresh, ymin, ymax, colors="red", linestyles="dashed", label="Threshold")
-
-    # 滑块
-    slider_ax = fig.add_axes([0.15, 0.08, 0.65, 0.03])
-    thresholdSlider = Slider(slider_ax, "Threshold", 0.01, 0.5, valinit=init_thresh)
-
-    def updatePlot(_=None):
-        thr = thresholdSlider.val
-
-        # TPR: intra <= thr 判为“同一样品”算对
-        TPR = float(np.mean(intraHammingDistances <= thr)) * 100.0
-
-        # TNR: inter > thr 判为“不同样品”算对
-        TNR = float(np.mean(interHammingDistances >  thr)) * 100.0
-
-        FNR = 100.0 - TPR
-        FPR = 100.0 - TNR
-
-        # 更新阈值线位置
-        ymin, ymax = ax.get_ylim()
-        thresholdLine.set_segments([np.array([[thr, ymin], [thr, ymax]])])
-
-        ax.set_title(f"TPR: {TPR:.2f}%,  TNR: {TNR:.2f}%\nFNR: {FNR:.2f}%,  FPR: {FPR:.2f}%")
-        fig.canvas.draw_idle()
-
-    thresholdSlider.on_changed(updatePlot)
-    updatePlot()  # 初始化标题
-
-    plt.tight_layout(rect=[0, 0.12, 1, 1])
     plt.show()
+
+    # # 初始阈值
+    # ymin, ymax = ax.get_ylim()
+    # init_thresh = 0.30
+    # thresholdLine = ax.vlines(init_thresh, ymin, ymax, colors="red", linestyles="dashed", label="Threshold")
+
+    # # 滑块
+    # slider_ax = fig.add_axes([0.15, 0.08, 0.65, 0.03])
+    # thresholdSlider = Slider(slider_ax, "Threshold", 0.01, 0.5, valinit=init_thresh)
+
+    # def updatePlot(_=None):
+    #     thr = thresholdSlider.val
+
+    #     # TPR: intra <= thr 判为“同一样品”算对
+    #     TPR = float(np.mean(intraHammingDistances <= thr)) * 100.0
+
+    #     # TNR: inter > thr 判为“不同样品”算对
+    #     TNR = float(np.mean(interHammingDistances >  thr)) * 100.0
+
+    #     FNR = 100.0 - TPR
+    #     FPR = 100.0 - TNR
+
+    #     # 更新阈值线位置
+    #     ymin, ymax = ax.get_ylim()
+    #     thresholdLine.set_segments([np.array([[thr, ymin], [thr, ymax]])])
+
+    #     ax.set_title(f"TPR: {TPR:.2f}%,  TNR: {TNR:.2f}%\nFNR: {FNR:.2f}%,  FPR: {FPR:.2f}%")
+    #     fig.canvas.draw_idle()
+
+    # thresholdSlider.on_changed(updatePlot)
+    # updatePlot()  # 初始化标题
+
+    # plt.tight_layout(rect=[0, 0.12, 1, 1])
 # if __name__ == "__main__":
 #     intraFingerprints = ImageHelper.loadImagesFromFolder("Refactor\example output\intras")
 #     interFingerprints = ImageHelper.loadImagesFromFolder("Refactor\example output\inters")
