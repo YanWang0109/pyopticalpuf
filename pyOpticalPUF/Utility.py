@@ -55,8 +55,10 @@ class ImageHelper:
 
     #     # === 保存 ===
     #     for img, name in zip(images, imageNames):
-    #         savePath = safePathToFolder / name
-    #         cv2.imwrite(str(savePath), img)
+    # 把文件名统一改为 .png
+            # name = Path(name).stem + ".png"
+            # savePath = safePathToFolder / name
+            # cv2.imwrite(str(savePath), img)
 
     #     print(f"[DONE] Saved {len(images)} images to {safePathToFolder}")
 
