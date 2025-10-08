@@ -19,8 +19,8 @@ if __name__ == "__main__":
     # === Set up ===
     intrasPath = Path("/content/drive/MyDrive/cutted_square_images/intra/Different_irradiance")
     intersRoot = Path("/content/drive/MyDrive/cutted_square_images/inter")
-    intrasOutputPath = Path("/content/drive/MyDrive/output_results/intras/Different_irradiance")
-    intersOutputPath = Path("/content/drive/MyDrive/output_results/inters")
+    intrasOutputPath = Path("/content/drive/MyDrive/ output_results/intras/Different_irradiance_test")
+    intersOutputPath = Path("/content/drive/MyDrive/ output_results/inters_test")
 
     intrasOutputPath.mkdir(exist_ok=True, parents=True)
     intersOutputPath.mkdir(exist_ok=True, parents=True)
@@ -58,11 +58,21 @@ if __name__ == "__main__":
 
 
     # === 4. Save fingerprints ===
+    # #keep file name 
+    # ImageHelper.saveImages(intraFingerprints, intrasOutputPath, sourceFolder=intrasPath)
+
+    # for label, fps in label_to_fps.items():
+    #     out_dir = intersOutputPath / label
+    #     out_dir.mkdir(parents=True, exist_ok=True)
+    #     sourceFolder = intersRoot / label
+    #     ImageHelper.saveImages(fps, out_dir, sourceFolder=sourceFolder)
+
     ImageHelper.saveImages(intraFingerprints, intrasOutputPath)
 
     for label, fps in label_to_fps.items():
         out_dir = intersOutputPath / label
         out_dir.mkdir(parents=True, exist_ok=True)
+        sourceFolder = intersRoot / label
         ImageHelper.saveImages(fps, out_dir)
 
     print(f"[DONE] Saved intra to: {intrasOutputPath}")

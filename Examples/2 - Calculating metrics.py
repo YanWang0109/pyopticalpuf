@@ -14,8 +14,9 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
 if __name__ == "__main__":
-    intraFingerprints = ImageHelper.loadImagesFromFolder("/content/drive/MyDrive/ output_results/intras/Different_irradiance")
-    interRootDir = Path("/content/drive/MyDrive/ output_results/inters") 
+    intraFingerprints = ImageHelper.loadImagesFromFolder("/content/drive/MyDrive/ output_results/intras/Different_irradiance_test")
+                                 
+    interRootDir = Path("/content/drive/MyDrive/ output_results/inters_test") 
     inter_labels = sorted([d for d in interRootDir.iterdir() if d.is_dir()])
     if len(inter_labels) < 2:
         raise RuntimeError(f"Need at least 2 labels in {interRootDir}, got: {inter_labels}")

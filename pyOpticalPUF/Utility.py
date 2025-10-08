@@ -27,6 +27,38 @@ class ImageHelper:
         assert (-imageWidth <= right) and (right <= imageWidth), "Cannot crop from out side of the image - bottomRight is not within the dimensions of the image"
 
         return image[top:bottom, left:right]
+    
+    # @staticmethod
+    # def saveImages(images: list[np.ndarray],
+    #            folderToSaveImagesTo: str,
+    #            sourceFolder: str = None,
+    #            imageNames: list[str] = []):
+
+    #     safePathToFolder = Path(folderToSaveImagesTo)
+    #     safePathToFolder.mkdir(exist_ok=True, parents=True)
+
+    #     # === 如果提供了原始文件夹路径，就根据它生成对应的文件名 ===
+    #     if sourceFolder is not None:
+    #         src = Path(sourceFolder)
+    #         fileTypes = [".png", ".jpeg", ".jpg", ".webp", ".tiff", ".bmp"]
+    #         filePaths = chain(*[src.glob(f"**/*{ft}") for ft in fileTypes])
+    #         _imgs_and_names = [(cv2.imread(str(p)), p.name) for p in filePaths]
+    #         imageNames = [name for img, name in _imgs_and_names if img is not None]
+
+    #         # 检查数量是否匹配
+    #         assert len(imageNames) == len(images), \
+    #             f"数量不一致: 源文件 {len(imageNames)} vs 指纹 {len(images)}"
+
+    #     # === 如果没有提供 imageNames，自动生成序号文件名 ===
+    #     if not imageNames:
+    #         imageNames = [f"image_{i}.png" for i in range(len(images))]
+
+    #     # === 保存 ===
+    #     for img, name in zip(images, imageNames):
+    #         savePath = safePathToFolder / name
+    #         cv2.imwrite(str(savePath), img)
+
+    #     print(f"[DONE] Saved {len(images)} images to {safePathToFolder}")
 
     @staticmethod
     def saveImages(images: list[np.ndarray], folderToSaveImagesTo: str, imageNames: list[str] = []):
@@ -36,7 +68,7 @@ class ImageHelper:
         if len(imageNames) == 0:
             imageNames = [f"image_{i}.png" for i in range(len(images))]
 
-        imageAndNamePairs = zip(images, imageNames)
+        imageAndNamePairs = zip(images, imageNames) #打包成元组
         [cv2.imwrite(f"{str(safePathToFolder / imageName)}", image) for image, imageName in imageAndNamePairs]
 
     @staticmethod
