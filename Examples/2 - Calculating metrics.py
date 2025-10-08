@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
 if __name__ == "__main__":
-    intraFingerprints = ImageHelper.loadImagesFromFolder("/content/drive/MyDrive/ output_results/intras/identical /a11")
+    intraFingerprints = ImageHelper.loadImagesFromFolder("/content/drive/MyDrive/ output_results/intras/Different_irradiance")
     interRootDir = Path("/content/drive/MyDrive/ output_results/inters") 
     inter_labels = sorted([d for d in interRootDir.iterdir() if d.is_dir()])
     if len(inter_labels) < 2:
@@ -37,10 +37,16 @@ if __name__ == "__main__":
         HammingDistanceCalculator.calculateHammingDistance(a, b).hammingDistance
         for a, b in inter_pairs
     ]
+    
+    intraDistanceMap = {}
+    for (a, b), dist in zip(intra_pairs, intraHammingDistances):
+     nameA = getattr(a, "filename", None) or getattr(a, "path", "unknown_A")
+     nameB = getattr(b, "filename", None) or getattr(b, "path", "unknown_B")
+     intraDistanceMap[(nameA, nameB)] = dist
 
     #3. Fit Guassian distribution and calculate metrics
-    intraGaussian = GaussianDistribution.fromData(intraHammingDistances)
-    interGaussian = GaussianDistribution.fromData(interHammingDistances)
+    intraGaussian = GuassianDistribution.fromData(intraHammingDistances)
+    interGaussian = GuassianDistribution.fromData(interHammingDistances)
     reliabilityScore          = reliability(intraGaussian)                         # 稳定性（越高越好）
     uniquenessScore           = uniqueness(interGaussian)                          # 唯一性（越高越好）
     enibScore                 = enib(interGaussian)                                # 参考你项目定义
@@ -59,12 +65,12 @@ Probability of cloning: {probabilityOfCloningScore}""")
     COLOR_INTER = "#ADBED6"  # 浅蓝
 
     fig, ax = plt.subplots(figsize=(7.5, 4.5))
-    bins = 10
-    ax.hist(intraHammingDistances, bins=bins, color=COLOR_INTRA, alpha=1.0,
-            edgecolor="white", label=f"Intras n={len(intraHammingDistances)}")
-    ax.hist(interHammingDistances, bins=bins, color=COLOR_INTER, alpha=1.0,
-            edgecolor="white", label=f"Inters n={len(interHammingDistances)}")
-    ax.set_xlim(0, 0.5)
+    Bin_edges = np.arange(0, 1.01, 0.01)
+    ax.hist(intraHammingDistances, bins=Bin_edges, color=COLOR_INTRA, alpha=1.0,
+            edgecolor="black", label=f"Intras(diff illumination) n={len(intraHammingDistances)}")
+    ax.hist(interHammingDistances, bins=Bin_edges, color=COLOR_INTER, alpha=1.0,
+            edgecolor="black", label=f"Inters n={len(interHammingDistances)}")
+    ax.set_xlim(0, 1)
     ax.set_xlabel("Hamming distance")
     ax.set_ylabel("Count")
     ax.legend(loc="upper right")
