@@ -59,21 +59,21 @@ if __name__ == "__main__":
 
     # === 4. Save fingerprints ===
     # #keep file name 
-    # ImageHelper.saveImages(intraFingerprints, intrasOutputPath, sourceFolder=intrasPath)
-
-    # for label, fps in label_to_fps.items():
-    #     out_dir = intersOutputPath / label
-    #     out_dir.mkdir(parents=True, exist_ok=True)
-    #     sourceFolder = intersRoot / label
-    #     ImageHelper.saveImages(fps, out_dir, sourceFolder=sourceFolder)
-
-    ImageHelper.saveImages(intraFingerprints, intrasOutputPath)
+    ImageHelper.saveImages(intraFingerprints, intrasOutputPath, sourceFolder=intrasPath)
 
     for label, fps in label_to_fps.items():
         out_dir = intersOutputPath / label
         out_dir.mkdir(parents=True, exist_ok=True)
         sourceFolder = intersRoot / label
-        ImageHelper.saveImages(fps, out_dir)
+        ImageHelper.saveImages(fps, out_dir, sourceFolder=sourceFolder)
+
+    # ImageHelper.saveImages(intraFingerprints, intrasOutputPath)
+
+    # for label, fps in label_to_fps.items():
+    #     out_dir = intersOutputPath / label
+    #     out_dir.mkdir(parents=True, exist_ok=True)
+    #     sourceFolder = intersRoot / label
+    #     ImageHelper.saveImages(fps, out_dir)
 
     print(f"[DONE] Saved intra to: {intrasOutputPath}")
     print(f"[DONE] Saved inter (by label) to: {intersOutputPath} → {list(label_to_fps.keys())}")
